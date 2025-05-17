@@ -3,7 +3,8 @@
     "name": "kds-app",
     "slug": "kds-app",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "landscape",
+    "screenOrientation": "landscape",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -18,7 +19,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "resizeableActivity": false,
+        "screenOrientation": "landscape"
       }
     },
     "web": {
