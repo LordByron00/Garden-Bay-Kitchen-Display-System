@@ -4,7 +4,7 @@ import { Dimensions, Platform, ScaledSize, StyleSheet } from 'react-native';
 const { width, height }: ScaledSize = Dimensions.get('window');
 
 // Base reference width (12" KDS landscape)
-const BASE_WIDTH = 2560;
+const BASE_WIDTH = 1920;
 const scale: number = width > 0 ? width / BASE_WIDTH : 1;
 
 // Kitchen Display System Touch Standards

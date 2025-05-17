@@ -1,10 +1,10 @@
 // context/OrdersContext.tsx
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 export type Order = {
   orderId: string;
   items: { name: string; quantity: number }[];
-  status: 'new' | 'preparing' | 'ready';
+  status: 'new' | 'pending' | 'preparing' | 'ready';
   arrivalTime: string;
   tableNumber: string;
   orderType: 'dine-in' | 'takeout' | 'delivery';
@@ -100,6 +100,66 @@ export const OrdersProvider: React.FC<{children: React.ReactNode}> = ({ children
       order.orderId.includes(query)
     );
   };
+
+  const fetchOrders = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/kds/orders');
+    const apiOrders = await response.json();
+    
+    // Transform API data to frontend format
+    const transformedOrders = apiOrders.reduce((acc: any[], apiItem: any) => {
+      // Find existing order or create new one
+      let order = acc.find((o: { orderId: string; }) => o.orderId === apiItem.order_id.toString());
+      
+      if (!order) {
+        order = {
+          orderId: apiItem.order_id.toString(),
+          // tableNumber: apiItem.order.table_number || 'take-out', // Add appropriate field
+          tableNumber: '2', // Add appropriate field
+          orderType: 'dine-in',  // Add appropriate field
+          items: [],
+          status: apiItem.status,
+          // status: 'new',
+          createdAt: new Date(apiItem.order.created_at),
+          totalPrice: apiItem.order.total_price,
+          priority: false // Initial priority state
+        };
+        acc.push(order);
+      }
+
+      // Add menu item to order
+      order.items.push({
+        id: apiItem.menu_item.id.toString(),
+        name: apiItem.menu_item.name,
+        quantity: apiItem.quantity,
+        price: apiItem.price,
+        notes: apiItem.special_instructions || '', // Add if available
+        imageUrl: apiItem.menu_item.image_url
+      });
+
+      return acc;
+    }, []);
+
+    setAllOrders(transformedOrders);
+    // Update other states based on transformed data
+    setPriorityOrders(transformedOrders.filter((order: { priority: any; }) => order.priority));
+    setReadyOrders(transformedOrders.filter((order: { status: string; }) => order.status === 'ready'));
+
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+  }
+};
+
+  useEffect(() => {
+    fetchOrders();
+    const interval = setInterval(fetchOrders, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
+
+    useEffect(() => {
+    console.log('allOrders')
+    console.log(allOrders)
+  }, [allOrders]);
 
   return (
     <OrdersContext.Provider

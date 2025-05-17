@@ -28,6 +28,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
 }) => {
   const statusColors = {
     new: '#f39c12',
+    pending: '#f39c12',
     preparing: '#3498db',
     ready: '#2ecc71'
   };
@@ -36,12 +37,15 @@ const OrderCard: React.FC<OrderCardProps> = ({
     <View style={[
       styles.card,
       order.urgent && styles.urgentCard,
-      { width: KDS_SCREEN.width * 0.3 }
+      { width: KDS_SCREEN.width * 0.3,
+        height: KDS_SCREEN.height * 0.4
+       }
     ]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.title, { fontSize: kdsFontSize(18) }]}>
-          #{order.orderId} • {tableNumber}
+          #{order.orderId}
+           {/* • {tableNumber} */}
         </Text>
         <View style={[styles.statusBadge, { backgroundColor: statusColors[order.status] }]}>
           <Text style={styles.statusText}>{order.status.toUpperCase()}</Text>
@@ -49,11 +53,11 @@ const OrderCard: React.FC<OrderCardProps> = ({
       </View>
 
       {/* Order Details */}
-      <View style={styles.details}>
+      {/* <View style={styles.details}>
         <Text style={[styles.detailText, { fontSize: kdsFontSize(12) }]}>
           {arrivalTime} • {orderType.toUpperCase()}
         </Text>
-      </View>
+      </View> */}
 
       {/* Items List */}
       <View style={styles.itemsContainer}>
@@ -100,10 +104,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
-    padding: KDS_TOUCH.padding,
-    margin: 8,
+    padding: KDS_TOUCH.padding * 1.5,
+    margin: 10,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
@@ -129,7 +133,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 4
+    borderRadius: 4,
+    margin: 5,
   },
   statusText: {
     color: 'white',
