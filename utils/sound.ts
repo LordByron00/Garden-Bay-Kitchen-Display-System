@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 type SoundType = 'new_order' | 'priority' | 'ready';
 
 const soundFiles = {
-  new_order: require('../assets/sounds/new-order.m4a'),
-  priority: require('../assets/sounds/priority-alert.m4a'),
+  new_order: require('../assets/sounds/new-order.mp3'),
+  priority: require('../assets/sounds/priority-alert.wav'),
   ready: require('../assets/sounds/order-ready.m4a')
 };
 

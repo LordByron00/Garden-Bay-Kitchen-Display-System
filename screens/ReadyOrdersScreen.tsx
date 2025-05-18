@@ -1,29 +1,32 @@
-import React from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity } from 'react-native';
 import { useOrders } from '../context/OrdersContext';
 import OrderCard from '../components/OrderCard/OrderCard';
 import { KDS_SCREEN, kdsFontSize } from '../constants/Screen';
+import SearchBar from '../components/SearchBar/SearchBar';
+import React, { useState } from 'react';
 
 const ReadyOrdersScreen = () => {
-  const { readyOrders } = useOrders();
+  const { readyOrders, searchOrders } = useOrders();
+  const [searchQuery, setSearchQuery] = useState('');
+  const filteredOrders = searchQuery ? searchOrders(searchQuery, 2) : readyOrders;
 
   // Simple print function that works with your existing context
-  const printAllReadyOrders = () => {
-    console.log('Printing all ready orders:', readyOrders);
-    // In a real app, you would connect to your printer API here
-    readyOrders.forEach(order => {
-      const printContent = `
-        Order #${order.orderId}
-        Table: ${order.tableNumber}
-        Type: ${order.orderType}
-        Items:
-        ${order.items.map(item => `- ${item.quantity}x ${item.name}`).join('\n')}
-        Status: READY
-        Time: ${new Date().toLocaleTimeString()}
-      `;
-      console.log(printContent);
-    });
-  };
+  // const printAllReadyOrders = () => {
+  //   console.log('Printing all ready orders:', readyOrders);
+  //   // In a real app, you would connect to your printer API here
+  //   readyOrders.forEach(order => {
+  //     const printContent = `
+  //       Order #${order.orderId}
+  //       Table: ${order.tableNumber}
+  //       Type: ${order.orderType}
+  //       Items:
+  //       ${order.items.map(item => `- ${item.quantity}x ${item.name}`).join('\n')}
+  //       Status: READY
+  //       Time: ${new Date().toLocaleTimeString()}
+  //     `;
+  //     console.log(printContent);
+  //   });
+  // };
 
   if (readyOrders.length === 0) {
     return (
@@ -35,20 +38,29 @@ const ReadyOrdersScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
+      
+      {/* <TouchableOpacity 
         style={styles.printAllButton}
         onPress={printAllReadyOrders}
       >
         <Text style={styles.printAllText}>PRINT ALL ({readyOrders.length})</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <SearchBar 
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search orders..."
+      />
 
       <FlatList
-        data={readyOrders}
+        data={filteredOrders}
         renderItem={({ item }) => (
           <OrderCard 
                 order={item}
                 showActions={false} // Disable buttons for ready orders
-                arrivalTime={''} tableNumber={''} orderType={''}          />
+                arrivalTime={''} tableNumber={''} orderType={''} 
+                showReadyButton = {false}
+                 />
         )}
         keyExtractor={item => item.orderId}
         contentContainerStyle={styles.listContent}
@@ -69,7 +81,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   columnWrapper: {
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginBottom: 15
   },
   emptyContainer: {

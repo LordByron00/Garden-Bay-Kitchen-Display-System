@@ -21,6 +21,7 @@
     "expo-av": "~15.0.2",
     "expo-font": "~13.0.4",
     "expo-status-bar": "~2.0.1",
+    "js-cookie": "^3.0.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.9",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "~18.3.12",
     "@types/react-native": "^0.72.8",
     "typescript": "^5.3.3"

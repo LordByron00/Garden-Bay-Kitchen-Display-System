@@ -27,10 +27,10 @@ const OrderCard: React.FC<OrderCardProps> = ({
   showReadyButton = true
 }) => {
   const statusColors = {
+    // new: '#f39c12',
     new: '#f39c12',
-    pending: '#f39c12',
-    preparing: '#3498db',
-    ready: '#2ecc71'
+    priority: '#3498db',
+    completed: '#2ecc71'
   };
 
   return (
@@ -38,7 +38,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
       styles.card,
       order.urgent && styles.urgentCard,
       { width: KDS_SCREEN.width * 0.3,
-        height: KDS_SCREEN.height * 0.4
+        // height: KDS_SCREEN.height * 0.4
        }
     ]}>
       {/* Header */}
@@ -85,6 +85,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               <Text style={styles.buttonText}>PRIORITIZE</Text>
             </TouchableOpacity>
           )}
+
           {showReadyButton && (
             <TouchableOpacity
               onPress={onReadyPress}
@@ -96,6 +97,15 @@ const OrderCard: React.FC<OrderCardProps> = ({
           )}
         </View>
       )}
+
+        {!showReadyButton && (
+        <View style={styles.details}>
+        <Text style={[styles.detailText, { fontSize: kdsFontSize(12) }]}>
+          {order.completedTime}
+        </Text>
+        </View>
+          )}
+
     </View>
   );
 };
@@ -111,11 +121,12 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
     elevation: 3,
-    justifyContent: 'space-between',
+    // minHeight: 150, 
+    // justifyContent: 'space-between',
   },
   urgentCard: {
     borderWidth: 2,
-    borderColor: '#e74c3c',
+    borderColor: '#faa989',
     backgroundColor: '#fff0f0'
   },
   header: {
@@ -157,7 +168,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginTop: 12
   },
   button: {

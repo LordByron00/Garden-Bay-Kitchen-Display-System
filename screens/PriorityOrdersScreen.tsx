@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { useOrders } from '../context/OrdersContext';
 import OrderCard from '../components/OrderCard/OrderCard';
 import { KDS_SCREEN } from '../constants/Screen';
 import { useSound } from '../utils/sound';
+import SearchBar from '../components/SearchBar/SearchBar';
 
 const PriorityOrdersScreen = () => {
-  const { priorityOrders, markAsReady } = useOrders();
-  const { playSound } = useSound();
+const { priorityOrders, markAsReady, searchOrders } = useOrders();
+const { playSound } = useSound();
+const [searchQuery, setSearchQuery] = useState('');
+const filteredOrders = searchQuery ? searchOrders(searchQuery, 1) : priorityOrders;
 
-  const handleReadyPress = async (orderId: string) => {
+  
+
+  const handleReadyPress = async (orderId: number) => {
     markAsReady(orderId);
     await playSound('ready');
   };
@@ -24,8 +29,15 @@ const PriorityOrdersScreen = () => {
 
   return (
     <View style={styles.container}>
+
+      <SearchBar 
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search orders..."
+      />
+
       <FlatList
-        data={priorityOrders}
+        data={filteredOrders}
         renderItem={({ item }) => (
           <OrderCard
                 order={item}
@@ -51,7 +63,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   columnWrapper: {
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginBottom: 15
   },
   emptyContainer: {

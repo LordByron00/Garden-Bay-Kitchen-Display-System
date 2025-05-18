@@ -4,13 +4,27 @@ import { useOrders } from '../context/OrdersContext';
 import OrderCard from '../components/OrderCard/OrderCard';
 import SearchBar from '../components/SearchBar/SearchBar';
 import { KDS_SCREEN } from '../constants/Screen';
+import { useSound } from '../utils/sound';
+
 
 const AllOrdersScreen = () => {
   const { allOrders, prioritizeOrder, markAsReady, searchOrders } = useOrders();
   const [searchQuery, setSearchQuery] = useState('');
+  const { playSound } = useSound();
 
-  const filteredOrders = searchQuery ? searchOrders(searchQuery) : allOrders;
+  const filteredOrders = searchQuery ? searchOrders(searchQuery, 0) : allOrders;
 
+
+    const handleReadyPress = async (orderId: number) => {
+    markAsReady(orderId);
+    await playSound('ready');
+  };
+
+  const handlePriorityPress = async (orderId: number) => {
+    prioritizeOrder(orderId);
+    await playSound('priority');
+  };
+  
   return (
     <View style={styles.container}>
       <SearchBar 
@@ -24,8 +38,8 @@ const AllOrdersScreen = () => {
         renderItem={({ item }) => (
           <OrderCard
             order={item}
-            onPriorityPress={() => prioritizeOrder(item.orderId)}
-            onReadyPress={() => markAsReady(item.orderId)} arrivalTime={''} tableNumber={''} orderType={''}          />
+            onPriorityPress={() => handlePriorityPress(item.orderId)}
+            onReadyPress={() => handleReadyPress(item.orderId)} arrivalTime={''} tableNumber={''} orderType={''}          />
         )}
         keyExtractor={item => item.orderId}
         contentContainerStyle={styles.listContent}
@@ -45,8 +59,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   columnWrapper: {
-    justifyContent: 'space-between',
+     justifyContent: 'flex-start',
+    // justifyContent: 'space-between',
     marginBottom: 15
+    
   }
 });
 
